@@ -45,6 +45,7 @@ add_library(GraphicsEngine STATIC)
 list(APPEND GRAPH_SOURCES
      ${CMAKE_CURRENT_SOURCE_DIR}/src/display.cpp
      ${CMAKE_CURRENT_SOURCE_DIR}/src/shader.cpp
+     ${CMAKE_CURRENT_SOURCE_DIR}/src/mesh.cpp
      )
 
 target_sources(GraphicsEngine PUBLIC ${GRAPH_SOURCES})
