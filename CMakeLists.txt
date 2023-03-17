@@ -5,6 +5,8 @@ project(SDOS_GRAPH_ENGINE VERSION 1.0)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 option(DEBUGGING "Toggle debugging mode for symbol generation etc." ON)
 option(ENABLE_TESTING "Choose whether to compile test files." ON)
 
