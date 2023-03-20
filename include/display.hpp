@@ -1,8 +1,6 @@
 #ifndef display_h
 #define display_h
 
-#include "externals.hpp"
-
 class Display
 {
     public:

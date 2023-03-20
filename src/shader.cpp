@@ -1,5 +1,4 @@
 #include "graph_engine.hpp"
-#include "shader.hpp"
 
 Shader::Shader(const std::string& fileName)
 {
@@ -12,7 +11,8 @@ Shader::Shader(const std::string& fileName)
     for (size_t i = 0; i < NUM_SHADERS; i++)
         glAttachShader(m_program, m_shaders[i]);
 
-    glBindAttribLocation(m_program, 0, "position");
+    glBindAttribLocation(m_program, 0, "position_");
+    glBindAttribLocation(m_program, 0, "texCoord_");
 
     glLinkProgram(m_program);
     CheckShaderError(m_program, GL_LINK_STATUS, true, "Error: Program failed to link: ");

@@ -1,16 +1,16 @@
 #ifndef MESH_HPP
 #define MESH_HPP
 
-#include "externals.hpp"
-
 class Vertex
 {
     public:
-    Vertex(const glm::vec3 pos);
+    Vertex(const glm::vec3 pos, const glm::vec2 texCoord);
+
+    glm::vec3 pos_;
+	glm::vec2 texCoord_;
 
     protected:
     private:
-    glm::vec3 pos_;
 };
 
 class Mesh
@@ -26,6 +26,7 @@ class Mesh
     enum
     {
         POSITION_VB,
+		TEXCOORD_VB,
         NUM_BUFFERS
     };
 

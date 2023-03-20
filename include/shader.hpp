@@ -1,8 +1,6 @@
 #ifndef SHADER_HPP
 #define SHADER_HPP
 
-#include "externals.hpp"
-
 class Shader
 {
     public:
