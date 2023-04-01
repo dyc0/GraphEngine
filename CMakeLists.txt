@@ -47,8 +47,11 @@ list(APPEND GRAPH_SOURCES
      ${CMAKE_CURRENT_SOURCE_DIR}/src/display.cpp
      ${CMAKE_CURRENT_SOURCE_DIR}/src/shader.cpp
      ${CMAKE_CURRENT_SOURCE_DIR}/src/mesh.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/src/texture.cpp
-     )
+     ${CMAKE_CURRENT_SOURCE_DIR}/src/texture.cpp
+     ${CMAKE_CURRENT_SOURCE_DIR}/src/transform.cpp
+     ${CMAKE_CURRENT_SOURCE_DIR}/src/camera.cpp
+     ${CMAKE_CURRENT_SOURCE_DIR}/src/obj_loader.cpp
+	 )
 
 target_sources(GraphicsEngine PUBLIC ${GRAPH_SOURCES})
 target_include_directories(GraphicsEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/third_party)

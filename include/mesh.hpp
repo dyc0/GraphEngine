@@ -1,6 +1,15 @@
 #ifndef MESH_HPP
 #define MESH_HPP
 
+#include <string>
+#include <vector>
+
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+
+#include "obj_loader.hpp"
+
+
 class Vertex
 {
     public:
@@ -16,17 +25,24 @@ class Vertex
 class Mesh
 {
     public:
-    Mesh(Vertex* vertices, unsigned int numVertices);
+    Mesh(Vertex* vertices, unsigned int numVertices, unsigned int* indices, unsigned int numIndices);
+	Mesh(const std::string& fileName);
+	
     virtual ~Mesh();
 
     void draw();
 
     protected:
     private:
-    enum
+	void InitMesh(const IndexedModel& model);
+
+	enum
     {
         POSITION_VB,
 		TEXCOORD_VB,
+
+		INDEX_VB,
+
         NUM_BUFFERS
     };
 

@@ -1,4 +1,4 @@
-#include "graph_engine.hpp"
+#include "shader.hpp"
 
 Shader::Shader(const std::string& fileName)
 {
@@ -20,6 +20,7 @@ Shader::Shader(const std::string& fileName)
     glValidateProgram(m_program);
     CheckShaderError(m_program, GL_VALIDATE_STATUS, true, "Error: Program is invalid: ");
 
+	m_uniforms[TRANSFORM_U] = glGetUniformLocation(m_program, "transform");
 }
 
 Shader::~Shader()
@@ -57,6 +58,15 @@ void Shader::bind()
 {
     glUseProgram(m_program);
 }
+
+
+void Shader::update(const Transform& transform, const Camera& camera)
+{
+	glm::mat4 model = camera.GetViewProjection() * transform.GetModel();
+
+	glUniformMatrix4fv(m_uniforms[TRANSFORM_U], 1, GL_FALSE, &model[0][0]);
+}
+
 
 GLuint Shader::create_shader(const std::string &text, GLenum shaderType)
 {

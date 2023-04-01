@@ -1,6 +1,11 @@
 #ifndef TEXTURE_HPP
 #define TEXTURE_HPP
 
+#include <iostream>
+#include <string>
+
+#include <GL/glew.h>
+
 class Texture
 {
 	public:
