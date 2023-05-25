@@ -1,5 +1,6 @@
 #include "object.hpp"
 #include "common.hpp"
+#include <GL/gl.h>
 #include <cstddef>
 #include <cstdio>
 #include <glm/fwd.hpp>
@@ -80,6 +81,9 @@ void Object::bindShader()
 	GLint normalAttrib = glGetAttribLocation(shaderProgram, "normal");
 	glEnableVertexAttribArray(normalAttrib);	
 	glVertexAttribPointer(normalAttrib, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glUniform1i(glGetUniformLocation(shaderProgram, "tex"), 0);
 }
 
 void Object::render() const

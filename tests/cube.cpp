@@ -13,7 +13,7 @@ class CubeApp: public Application
 	{
 		oh = new ObjectHandler();
 		
-		cube = oh->loadOBJ("res/cube.obj");
+		cube = oh->loadOBJ("res/default_cube.obj");
 		std::cout << "VERTICES" << std::endl;
 		for (auto vertex: cube->vertices)
 			std::cout << vertex.x << "," << vertex.y << "," << vertex.z << std::endl;

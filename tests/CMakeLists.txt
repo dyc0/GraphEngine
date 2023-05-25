@@ -2,6 +2,7 @@
 list(APPEND tests
 	 app_test.cpp
 	 cube.cpp
+	 frames.cpp
      )
 
 # Enabling testing.
