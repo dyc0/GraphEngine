@@ -6,13 +6,98 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <SOIL/SOIL.h>
 
-void ObjectHandler::loadOBJ(const std::string& path,
-							std::vector<glm::vec3> & outVertices,
-							std::vector<glm::vec2> & outUvs,
-							std::vector<glm::vec3> & outNormals
-							)
+void Object::generateBuffers()
 {
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	glGenBuffers(1, &vertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER,
+				 vertices.size()*sizeof(glm::vec3), 
+				 &vertices[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &uvBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
+	glBufferData(GL_ARRAY_BUFFER,
+				 uvs.size()*sizeof(glm::vec2), 
+				 &uvs[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &normalBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+	glBufferData(GL_ARRAY_BUFFER,
+				 normals.size()*sizeof(glm::vec2), 
+				 &normals[0], GL_STATIC_DRAW);
+}
+
+void Object::loadTexture(const std::string path)
+{
+	glGenTextures(1, &texture);
+	
+	int width, height;
+	unsigned char* image;
+
+	glBindTexture(GL_TEXTURE_2D, texture);		
+	image =	SOIL_load_image(path.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+				 width, height, 0, GL_RGB,
+				 GL_UNSIGNED_BYTE, image);
+	SOIL_free_image_data(image);
+	
+	glGenerateMipmap(GL_TEXTURE_2D);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+}
+
+void Object::setShaderProgram(GLuint shader)
+{
+	shaderProgram = shader;
+}
+
+void Object::bindShader()
+{
+	if (shaderProgram == -1) return;
+	// TODO: Error.
+	
+	glUseProgram(shaderProgram);
+	glBindVertexArray(vao);
+	
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
+	glEnableVertexAttribArray(posAttrib);	
+	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
+	GLint uvAttrib = glGetAttribLocation(shaderProgram, "uv");
+	glEnableVertexAttribArray(uvAttrib);	
+	glVertexAttribPointer(uvAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+	GLint normalAttrib = glGetAttribLocation(shaderProgram, "normal");
+	glEnableVertexAttribArray(normalAttrib);	
+	glVertexAttribPointer(normalAttrib, 3, GL_FLOAT, GL_FALSE, 0, 0);
+}
+
+void Object::render() const
+{
+	glBindVertexArray(vao);
+	glUseProgram(shaderProgram);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	
+	glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+}
+
+
+Object* ObjectHandler::loadOBJ(const std::string& path)
+{
+	Object* object = new Object();
+
 	std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
 	std::vector<glm::vec3> tmpVertices, tmpNormals;
 	std::vector<glm::vec2> tmpUvs;
@@ -25,10 +110,12 @@ void ObjectHandler::loadOBJ(const std::string& path,
 
 	for (size_t i = 0; i<vertexIndices.size(); i++)
 	{
-		outVertices.push_back(tmpVertices[vertexIndices[i] - 1]);
-		outUvs.push_back(tmpUvs[uvIndices[i] - 1]);
-		outNormals.push_back(tmpNormals[normalIndices[i] - 1]);
+		object->vertices.push_back(tmpVertices[vertexIndices[i] - 1]);
+		object->uvs.push_back(tmpUvs[uvIndices[i] - 1]);
+		object->normals.push_back(tmpNormals[normalIndices[i] - 1]);
 	}
+
+	return object;
 }
 
 void ObjectHandler::tokenize(const std::string& line,  std::vector<std::string>& tokens, char delimiter)const
@@ -65,12 +152,14 @@ void ObjectHandler::parseLine(
 		break;
 		case 't':
 		uvs.push_back(
-				glm::vec2(std::stof(tokens[1]), std::stof(tokens[2]))
-				);
+			glm::vec2(std::stof(tokens[1]), std::stof(tokens[2]))
+			);
+		break;
 		case 'n':
 		normals.push_back(
 			glm::vec3(std::stof(tokens[1]), std::stof(tokens[2]), std::stof(tokens[3]))
 			);
+		break;
 		}
 		break;
 	case 'f':

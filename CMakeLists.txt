@@ -38,10 +38,9 @@ set(glm_DIR /usr/lib64/cmake/glm/)
 find_package(glm REQUIRED)
 include_directories(${GLM_INCLUDE_DIRS})
 
-#find_package(SDL2 REQUIRED)
-#include_directories(${SDL2_INCLUDE_DIRS})
-
 find_package(glfw3 REQUIRED)
+
+set(SOIL /usr/local/lib/libSOIL.a)
 
 add_library(GraphicsEngine STATIC)
 
@@ -50,16 +49,17 @@ list(APPEND GRAPH_SOURCES
 	 ${CMAKE_CURRENT_SOURCE_DIR}/src/errors.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/src/common.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/src/application.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/src/shader.cpp
 	 )
 
 target_sources(GraphicsEngine PUBLIC ${GRAPH_SOURCES})
 target_include_directories(GraphicsEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/third_party)
-target_link_libraries(GraphicsEngine PUBLIC ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} glm glfw compiler_flags)
+target_link_libraries(GraphicsEngine PUBLIC ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} SOIL glm glfw compiler_flags)
 
 
 add_executable(example example.cpp)
 target_include_directories(example PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/third_party)
-target_link_libraries(example PUBLIC GraphicsEngine ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} glm glfw compiler_flags)
+target_link_libraries(example PUBLIC GraphicsEngine ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} SOIL glm glfw compiler_flags)
 
 if(ENABLE_TESTING)
   add_subdirectory(tests)

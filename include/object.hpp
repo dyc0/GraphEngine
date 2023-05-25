@@ -4,6 +4,8 @@
 #include "common.hpp"
 #include "errors.hpp"
 
+#include <GL/glew.h>
+#include <GL/gl.h>
 #include <glm/glm.hpp>
 
 #include <iostream>
@@ -12,15 +14,46 @@
 #include <string>
 #include<vector>
 
+class Object
+{
+	public:
+	Object() = default;
+
+	virtual void generateBuffers();
+	virtual void loadTexture(const std::string path);
+	
+	void setShaderProgram(GLuint shader);
+	virtual void bindShader();
+
+	virtual void render() const;
+
+	GLuint vao;
+	GLuint vertexBuffer;
+	GLuint uvBuffer;
+	GLuint normalBuffer;
+
+	GLuint texture;
+	
+	GLuint fragmentShader;
+	GLuint vertexShader;
+	glm::mat4 transform;
+
+	GLuint shaderProgram;
+
+	
+	std::vector<glm::vec3> vertices, normals;
+	std::vector<glm::vec2> uvs;
+
+	enum attribute: GLuint {VERTEX, UV, NORMAL};
+
+	private:
+};
+
 class ObjectHandler
 {
 	public:
 		ObjectHandler() = default;
-		void loadOBJ(const std::string& path,
-				std::vector<glm::vec3> & outVertices,
-				std::vector<glm::vec2> & outUvs,
-				std::vector<glm::vec3> & outNormals
-				);
+		Object* loadOBJ(const std::string& path);
 
 	private:
 	void tokenize(const std::string& line,  std::vector<std::string>& tokens, char delimiter = ' ') const;

@@ -12,6 +12,7 @@ class Application
 	public:
 	static Application* createApplication();
 	virtual ~Application();
+	Application();
 	static Application* app;
 	
 	virtual void init(int width, int height, const std::string title);
@@ -46,7 +47,6 @@ class Application
 	void strTest(std::string name) const;
 
 	private:
-	Application();
 
 	public:
 	struct APPINFO

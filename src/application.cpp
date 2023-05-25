@@ -72,7 +72,7 @@ void Application::run()
 	glfwSetCursorPosCallback(window, glfwCursorPosCallback);
 	glfwSetScrollCallback(window, glfwScrollCallback);
 
-	glewInit();
+	if (glewInit() != GLEW_OK) exit(-1);
 	startup();
 	while(!glfwWindowShouldClose(window))
 	{
