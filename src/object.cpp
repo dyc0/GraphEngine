@@ -9,6 +9,11 @@
 #include <vector>
 #include <SOIL/SOIL.h>
 
+Object::Object()
+{
+	transform = glm::mat4(1.0f);
+}
+
 void Object::generateBuffers()
 {
 	glGenVertexArrays(1, &vao);
@@ -54,6 +59,13 @@ void Object::loadTexture(const std::string path)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 }
 
+void Object::setTransform(glm::mat4 model)
+{
+	transform = model;
+	GLuint uniTransform = glGetUniformLocation(shaderProgram, "model");
+	glUniformMatrix4fv(uniTransform, 1, GL_FALSE, glm::value_ptr(transform));
+}
+
 void Object::setShaderProgram(GLuint shader)
 {
 	shaderProgram = shader;
@@ -84,6 +96,9 @@ void Object::bindShader()
 
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glUniform1i(glGetUniformLocation(shaderProgram, "tex"), 0);
+
+	GLuint uniTransform = glGetUniformLocation(shaderProgram, "model");
+	glUniformMatrix4fv(uniTransform, 1, GL_FALSE, glm::value_ptr(transform));
 }
 
 void Object::render() const

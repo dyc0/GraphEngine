@@ -7,6 +7,7 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <iostream>
 #include <fstream>
@@ -23,6 +24,10 @@ class Shader
 	void createFragmentShader(const std::string& fragSrc);
 	void generateShaderProgram();
 
+	void setPerspective(const glm::mat4 perspective);
+	void setCamera(const glm::mat4 camera);
+	void bindGlobalTransforms() const;
+
 	GLuint getProgram() const;
 
 	protected:
@@ -33,6 +38,9 @@ class Shader
 	private:
 	GLuint vertexShader, fragmentShader;
 	GLuint shaderProgram;
+
+	glm::mat4 view;
+	glm::mat4 proj;
 };
 
 #endif

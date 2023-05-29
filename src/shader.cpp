@@ -21,6 +21,27 @@ void Shader::generateShaderProgram()
 	glLinkProgram(shaderProgram);
 }
 
+void Shader::setPerspective(const glm::mat4 perspective)
+{
+	proj = perspective;
+}
+
+void Shader::setCamera(const glm::mat4 camera)
+{
+	view = camera;
+}
+
+void Shader::bindGlobalTransforms() const
+{
+	glUseProgram(shaderProgram);
+
+	GLuint uniView = glGetUniformLocation(shaderProgram, "view");
+	glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
+
+	GLuint uniProj = glGetUniformLocation(shaderProgram, "proj");
+	glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
+}
+
 GLuint Shader::getProgram() const
 {
 	return shaderProgram;

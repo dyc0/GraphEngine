@@ -7,6 +7,7 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <iostream>
 #include <fstream>
@@ -17,11 +18,13 @@
 class Object
 {
 	public:
-	Object() = default;
+	Object();
 
 	virtual void generateBuffers();
 	virtual void loadTexture(const std::string path);
-	
+
+	void setTransform(glm::mat4 model);
+
 	void setShaderProgram(GLuint shader);
 	virtual void bindShader();
 
