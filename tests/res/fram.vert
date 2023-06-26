@@ -12,7 +12,9 @@ uniform mat4 proj;
 
 void main()
 {
+	mat3 scale_f = mat3(0.7);
+	mat4 scale = mat4(scale_f);
 	Texcoord = uv;
-	gl_Position = proj * view * model * vec4(position, 1.0);
+	gl_Position = proj * view * model * scale * vec4(position, 1.0);
 }
 
